@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="NeverLogOff:jar">
+    <output-path>$PROJECT_DIR$/../../../Servers/Server Spigot 1.8/plugins</output-path>
+    <root id="archive" name="NeverLogOff.jar">
+      <element id="module-output" name="NeverLogOff" />
+      <element id="file-copy" path="$PROJECT_DIR$/src/plugin.yml" />
+    </root>
+  </artifact>
+</component>
