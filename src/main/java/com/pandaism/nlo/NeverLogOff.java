@@ -35,6 +35,7 @@ import java.util.logging.Level;
 public class NeverLogOff extends JavaPlugin {
     FileStorage fs;
     public String creamName = ChatColor.DARK_PURPLE + "Camouflage Cream";
+    public ItemStack cream;
 
     @Override
     public void onEnable() {
@@ -67,7 +68,7 @@ public class NeverLogOff extends JavaPlugin {
         //CamoCream Meta and Recipe
         List<String> creamLore = new ArrayList<String>();
         creamLore.add(ChatColor.AQUA + "Apply evenly to hide yourself upon login off");
-        ItemStack cream = new ItemStack(Material.MAGMA_CREAM, 1);
+        cream = new ItemStack(Material.MAGMA_CREAM, 1);
         ItemMeta creamMeta = cream.getItemMeta();
         creamMeta.setDisplayName(creamName);
         creamMeta.setLore(creamLore);

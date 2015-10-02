@@ -62,12 +62,12 @@ public class SpawnNPC implements Listener{
                 npc.addTrait(OfflinePlayerTrait.class);
                 npc.addTrait(OfflinePlayerAI.class);
                 npc.setProtected(false);
-                if(player.getItemInHand().getItemMeta() == null) {
-                } else if(player.getItemInHand().getItemMeta().getDisplayName().equals(this.plugin.creamName)) {
+                if(player.getItemInHand().equals(this.plugin.cream)) {
                     npc.setName("");
+                    npc.teleport(player.getLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN);
+                } else {
+                    npc.teleport(player.getLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN);
                 }
-                npc.teleport(player.getLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN);
-
                 this.plugin.getFileStorage().savePlayerInv(player.getUniqueId(), npc.getUniqueId().toString(), player, player.getInventory());
                 this.plugin.getFileStorage().savePlayerInfo(player);
 
@@ -78,11 +78,14 @@ public class SpawnNPC implements Listener{
             npc.addTrait(OfflinePlayerAI.class);
             npc.getDefaultGoalController();
             npc.setProtected(false);
-            if(player.getItemInHand().getItemMeta() == null) {
-            } else if(player.getItemInHand().getItemMeta().getDisplayName().equals(this.plugin.creamName)) {
+
+            if(player.getItemInHand().equals(this.plugin.cream)) {
                 npc.setName("");
+                npc.spawn(player.getLocation());
+            } else {
+                npc.spawn(player.getLocation());
             }
-            npc.spawn(player.getLocation());
+
 
             this.plugin.getFileStorage().savePlayerInv(player.getUniqueId(), npc.getUniqueId().toString(), player, player.getInventory());
             this.plugin.getFileStorage().savePlayerInfo(player);
@@ -119,8 +122,8 @@ public class SpawnNPC implements Listener{
                 this.plugin.getFileStorage().loadPlayerInfo(player.getUniqueId(), player, player.getInventory());
                 npc = registry.getByUniqueIdGlobal(NPCUUID);
                 npc.despawn();
-                if(this.plugin.getFileStorage().retrieveItemInHand(player.getUniqueId()).getItemMeta() == null) {
-                } else if(this.plugin.getFileStorage().retrieveItemInHand(player.getUniqueId()).getItemMeta().getDisplayName().equals(this.plugin.creamName)) {
+
+                if(this.plugin.getFileStorage().retrieveItemInHand(player.getUniqueId()).equals(this.plugin.cream)) {
                     if(this.plugin.getFileStorage().retrieveItemInHand(player.getUniqueId()).getAmount() > 1) {
                         player.getInventory().getItemInHand().setAmount(this.plugin.getFileStorage().retrieveItemInHand(player.getUniqueId()).getAmount() - 1);
                     } else {
