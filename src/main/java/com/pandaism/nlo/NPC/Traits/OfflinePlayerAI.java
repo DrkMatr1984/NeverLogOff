@@ -67,8 +67,8 @@ public class OfflinePlayerAI extends Trait {
                         npc.getNavigator().setTarget(damager, true);
                         break;
                     }
+                    break;
                 }
-                break;
             }
 
         } else if((damager != npc) && (e.getDamage() > 0.0D)) {
