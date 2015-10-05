@@ -67,7 +67,7 @@ public class NeverLogOff extends JavaPlugin {
     private void makeRecipe() {
         //CamoCream Meta and Recipe
         List<String> creamLore = new ArrayList<String>();
-        creamLore.add(ChatColor.AQUA + "Apply evenly to hide yourself upon login off");
+        creamLore.add(ChatColor.AQUA + "Apply evenly to hide yourself upon logging off");
         cream = new ItemStack(Material.MAGMA_CREAM, 1);
         ItemMeta creamMeta = cream.getItemMeta();
         creamMeta.setDisplayName(creamName);
