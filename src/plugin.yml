@@ -1,5 +1,5 @@
 name: NeverLogOff
 main: com.pandaism.nlo.NeverLogOff
-version: 1.1.4
+version: 1.2
 depend: [Citizens]
 softdepend: [Citizens]
