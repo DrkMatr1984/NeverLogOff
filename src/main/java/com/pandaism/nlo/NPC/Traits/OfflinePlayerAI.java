@@ -21,7 +21,7 @@ import java.util.Random;
  * Created by Pandaism on 9/11/2015.
  */
 public class OfflinePlayerAI extends Trait {
-    NeverLogOff plugin;
+    public NeverLogOff plugin;
     Entity damager;
 
     public OfflinePlayerAI() {
@@ -54,13 +54,61 @@ public class OfflinePlayerAI extends Trait {
 
                         new BukkitRunnable() {
                             public void run() {
-                                if (damager.isDead()) {
-                                    cancel();
+                                npc.faceLocation(damager.getLocation());
+
+                                double npcInitialX = npc.getEntity().getLocation().getX();
+                                double npcInitialZ = npc.getEntity().getLocation().getZ();
+
+                                double targetLocationX = damager.getLocation().getX();
+                                double targetLocationZ = damager.getLocation().getZ();
+
+                                //Check Line of Sight
+                                if(((LivingEntity)npc.getEntity()).hasLineOfSight(damager)) {
+                                    //check if damager is dead
+                                    if(!damager.isDead()) {
+                                        double x = npcInitialX - targetLocationX;
+                                        double z = npcInitialZ - targetLocationZ;
+
+                                        //Check 2 circles; inner r=8, outer r=16
+                                        if((Math.pow(x, 2) + Math.pow(z, 2) < 256) && (Math.pow(x, 2) + Math.pow(z, 2) > 64)) {
+                                            npc.getNavigator().setTarget(damager.getLocation());
+                                        } else if(Math.pow(x, 2) + Math.pow(z, 2) <= 64) {
+                                            npc.getNavigator().cancelNavigation();
+                                            ((Player) npc.getEntity()).launchProjectile(Arrow.class);
+                                            ((Player) npc.getEntity()).playSound(npc.getEntity().getLocation(), Sound.SHOOT_ARROW, 1, 0);
+                                        } else if(Math.pow(x, 2) + Math.pow(z, 2) >= 256) {
+                                            npc.getNavigator().cancelNavigation();
+                                            //Check saving and cancel
+                                            plugin.getFileStorage().saveLocation(plugin.getFileStorage().retrievePlayerUUID(npc.getName()), npc.getEntity().getLocation());
+                                            cancel();
+                                        }
+                                    } else {
+                                        plugin.getFileStorage().saveLocation(plugin.getFileStorage().retrievePlayerUUID(npc.getName()), npc.getEntity().getLocation());
+                                        cancel();
+                                    }
+                                } else {
+                                    if(!damager.isDead()) {
+                                        double x = npcInitialX - targetLocationX;
+                                        double z = npcInitialZ - targetLocationZ;
+
+                                        if((Math.pow(x, 2) + Math.pow(z, 2) < 256) && (Math.pow(x, 2) + Math.pow(z, 2) > 64)) {
+                                            npc.getNavigator().setTarget(damager.getLocation());
+                                        } else if(Math.pow(x, 2) + Math.pow(z, 2) <= 64) {
+                                            npc.getNavigator().setTarget(damager.getLocation());
+                                        } else if(Math.pow(x, 2) + Math.pow(z, 2) >= 256) {
+                                            npc.getNavigator().cancelNavigation();
+                                            //Check saving and cancel
+                                            plugin.getFileStorage().saveLocation(plugin.getFileStorage().retrievePlayerUUID(npc.getName()), npc.getEntity().getLocation());
+                                            cancel();
+                                        }
+                                    } else {
+                                        //Check saving and cancel
+                                        plugin.getFileStorage().saveLocation(plugin.getFileStorage().retrievePlayerUUID(npc.getName()), npc.getEntity().getLocation());
+                                        cancel();
+                                    }
+
                                 }
 
-                                npc.faceLocation(damager.getLocation());
-                                ((Player) npc.getEntity()).launchProjectile(Arrow.class);
-                                ((Player) npc.getEntity()).playSound(npc.getEntity().getLocation(), Sound.SHOOT_ARROW, 1, 0);
                             }
                         }.runTaskTimer(this.plugin, 0L, 15L);
                     } else {
@@ -73,25 +121,17 @@ public class OfflinePlayerAI extends Trait {
 
         } else if((damager != npc) && (e.getDamage() > 0.0D)) {
             npc.getNavigator().setTarget(damager, true);
+
+            new BukkitRunnable() {
+                public void run() {
+                    if(damager.isDead()) {
+                        plugin.getFileStorage().saveLocation(plugin.getFileStorage().retrievePlayerUUID(npc.getName()), npc.getEntity().getLocation());
+                        cancel();
+                    } else {
+                        plugin.getFileStorage().saveLocation(plugin.getFileStorage().retrievePlayerUUID(npc.getName()), npc.getEntity().getLocation());
+                    }
+                }
+            }.runTaskTimer(this.plugin, 0L, 5L);
         }
-//          else {
-//            if(damager != npc && e.getDamage() > 0) {
-//                initalLocation = npc.getStoredLocation();
-//
-//                //Check code
-//                //Arrgo Distance Check
-//                Bukkit.getScheduler().scheduleSyncRepeatingTask(this.plugin, new Runnable() {
-//                    public void run() {
-//                        if (npc.getNavigator().getEntityTarget() == null) {
-//                            npc.getNavigator().getTargetAsLocation().add(initalLocation);
-//                        } else if (npc.getNavigator().getTargetAsLocation().distance(initalLocation) > 30) {
-//                            npc.getNavigator().getTargetAsLocation().add(initalLocation);
-//                        } else {
-//                            npc.getNavigator().setTarget(damager, true);
-//                        }
-//                    }
-//                }, 0L, 5L);
-//            }
-//        }
     }
 }
