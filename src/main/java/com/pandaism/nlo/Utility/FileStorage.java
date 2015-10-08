@@ -256,6 +256,20 @@ public class FileStorage {
         return false;
     }
 
+    public boolean setNPCUUID(UUID uuid) {
+        try {
+            this.invDataFile = new File("plugins" + System.getProperty("file.separator") + "NeverLogOff" + System.getProperty("file.separator") + "InventoryData" + System.getProperty("file.separator") + uuid + ".yml");
+            FileConfiguration ymlFormatting = YamlConfiguration.loadConfiguration(this.invDataFile);
+
+            ymlFormatting.set("RelatedOfflineUUID", uuid);
+            ymlFormatting.save(this.invDataFile);
+            return true;
+        }catch (Exception e) {
+            this.plugin.getLogger().severe("Could not set the npcuuid of " + uuid + "!!!");
+        }
+        return false;
+    }
+
     public boolean saveLocation(UUID uuid, Location location) {
         try {
             this.invDataFile = new File("plugins" + System.getProperty("file.separator") + "NeverLogOff" + System.getProperty("file.separator") + "InventoryData" + System.getProperty("file.separator") + uuid + ".yml");
