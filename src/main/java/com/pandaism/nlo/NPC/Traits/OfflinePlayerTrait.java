@@ -93,6 +93,7 @@ public class OfflinePlayerTrait extends Trait{
         //Reset Experience
         this.plugin.getFileStorage().setExperience(uuid);
 
+
         //New Spawn
         Random ran = new Random();
         int x = ran.nextInt(400);
@@ -103,6 +104,11 @@ public class OfflinePlayerTrait extends Trait{
         npc.spawn(newSpawn);
         Chunk respawnChunk = world.getChunkAt(newSpawn);
         snpc.chunkList.add(respawnChunk);
+
+        //SetNPCUUID
+        if(npc.getTrait(Equipment.class).get(Equipment.EquipmentSlot.HAND) == this.plugin.cream) {
+            this.plugin.getFileStorage().setNPCUUID(npc.getUniqueId());
+        }
 
         //Create a Timer
         task = Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable() {
